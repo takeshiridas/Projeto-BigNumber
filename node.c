@@ -14,6 +14,7 @@ Node node(int data){
 void node_print_debug(Node l){
     printf("end: %u\n", l);
     printf("data: %d\n", l->data);
+    printf("prev: %u\u", l->prev);
     printf("next: %u\n", l->next);
     printf("\n\n");
 }
