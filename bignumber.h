@@ -5,9 +5,9 @@ typedef struct _bignumber* BigNumber;
 
 BigNumber bignumber(void);//Construtor de BigNumber
 
-void bignumber_push_back(BigNumber b, int data);//Inserir número no final(Digito menos significativo)
+void bignumber_push_back(BigNumber b, int data);//Inserir número no final ou direita(Digito menos significativo)
 
-void bignumber_push_front(BigNumber b, int data);//Inserir no início(Digito Mais Significativo)
+void bignumber_push_front(BigNumber b, int data);//Inserir no início ou esquerda(Digito Mais Significativo)
 
 void print_bignumber(BigNumber bignumber); //Impressor de BigNumber
 

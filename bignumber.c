@@ -23,12 +23,12 @@ BigNumber bignumber(void){
 void bignumber_push_back(BigNumber b, int data){
     Node p = node(data);
 
-    if(b->last == NULL){ //Caso o último nó esteja vazio
+    if(b->last == NULL){ //Caso a lista esteja vazio
         b->first = p; //Atualiza o ponteiro do primeiro nó
         b->last = p; //Atualiza o ponteiro do último nó
     } else{
-        p->prev = b->last; //O anterior do novo nó é o último nó(à direita)
-        b->last->next = p; //O próximo do último nó é o novo nó(à esquerda)
+        p->prev = b->first; //O anterior do novo nó é o primeiro nó(à esquerda)
+        b->first->next = p; //O próximo do primeiro nó é o novo nó(à direita)
         b->last = p; //O último nó agora é o novo nó
     }
 
@@ -42,8 +42,8 @@ void bignumber_push_front(BigNumber b, int data){
         b->first = p; 
         b->last = p;
     } else{
-        p->next = b->first; //O próximo do novo nó é o primeiro nó(à esquerda)
-        b->first->prev = p; //O anterior do primeiro nó é o novo nó(à direita)
+        p->next = b->last; //O próximo do novo nó é o primeiro nó(à esquerda)
+        b->last->prev = p; //O anterior do primeiro nó é o novo nó(à direita)
         b->first = p; //O primeiro nó agora é o novo nó
     }
 
