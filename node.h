@@ -5,8 +5,8 @@ typedef struct _node* Node;
 
 struct _node{
     int data;
-    struct _node* next;
-    struct _node* prev;
+    struct _node* next; //Aponta para o nó à direita
+    struct _node* prev; //Aponta para o nó à esquerda
 };
 
 Node node(int data);

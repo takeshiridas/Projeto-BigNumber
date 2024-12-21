@@ -11,7 +11,7 @@ struct _bignumber{
 };
 
 BigNumber bignumber(void){
-	BigNumber b = malloc(sizeof(BigNumber));
+	BigNumber b = malloc(sizeof(struct _bignumber));
 
     b->first = NULL;
     b->last = NULL;
@@ -42,16 +42,22 @@ void bignumber_push_front(BigNumber b, int data){
         b->first = p; 
         b->last = p;
     } else{
-        p->next = b->last; //O próximo do novo nó é o primeiro nó(à esquerda)
-        b->last->prev = p; //O anterior do primeiro nó é o novo nó(à direita)
+        p->next = b->last; //O próximo do novo nó é o ultimo nó(à direita)
+        b->last->prev = p; //O anterior do primeiro nó é o novo nó(à esquerda)
         b->first = p; //O primeiro nó agora é o novo nó
     }
 
     b->n_elements += 1;
 }
 
-void print_bignumber(BigNumber bignumber){
-	
+void read_bignumber(BigNumber b){
+    char c;
+    while(scanf("%c", &c) == 1 && c != '\n'){
+        bignumber_push_back(b, c - '0');
+    }
+}
+
+void print_bignumber(BigNumber b){
 }
 
 BigNumber sum_bignumber(Bignumber a, BigNumber b{

@@ -9,7 +9,9 @@ void bignumber_push_back(BigNumber b, int data);//Inserir número no final ou di
 
 void bignumber_push_front(BigNumber b, int data);//Inserir no início ou esquerda(Digito Mais Significativo)
 
-void print_bignumber(BigNumber bignumber); //Impressor de BigNumber
+void read_bignumber(BigNumber b); //Leitor do BigNumber
+
+void print_bignumber(BigNumber b); //Impressor de BigNumber
 
 BigNumber sum_bignumber(Bignumber a, BigNumber b);//Soma
 
