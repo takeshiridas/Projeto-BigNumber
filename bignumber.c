@@ -20,7 +20,7 @@ BigNumber bignumber(void){
     return b;
 }
 
-void bignumber_push_back(BigNumber b, int data){
+void bignumber_push_front(BigNumber b, int data){
     Node p = node(data);
 
     if(b->last == NULL){ //Caso o último nó esteja vazio
@@ -35,7 +35,7 @@ void bignumber_push_back(BigNumber b, int data){
     b->n_elements += 1; //Aumenta o número de elementos
 }
 
-void bignumber_push_front(BigNumber b, int data){
+void bignumber_push_back(BigNumber b, int data){
     Node p = node(data);
 
     if(b->first == NULL){ 
