@@ -7,6 +7,7 @@ Node node(int data){
     Node p = malloc(sizeof(Node));
     p->data = data;
     p->next = NULL;
+    p->prev = NULL;
 
     return p;
 }
