@@ -20,31 +20,31 @@ BigNumber bignumber(void){
     return b;
 }
 
-void bignumber_push_front(BigNumber b, int data){
+void bignumber_push_back(BigNumber b, int data){
     Node p = node(data);
 
     if(b->last == NULL){ //Caso o último nó esteja vazio
         b->first = p; //Atualiza o ponteiro do primeiro nó
         b->last = p; //Atualiza o ponteiro do último nó
     } else{
-        p->prev = b->last; //Atualiza o ponteiro anterior ao nó atual como o ponteiro do último nó
-        b->last->next = p; //Atualiza o ponteiro do próximo nó do último no como o nó atual
-        b->last = p; //Atualiza o último nó para o "novo" último nó
+        p->prev = b->last; //O anterior do novo nó é o último nó(à direita)
+        b->last->next = p; //O próximo do último nó é o novo nó(à esquerda)
+        b->last = p; //O último nó agora é o novo nó
     }
 
     b->n_elements += 1; //Aumenta o número de elementos
 }
 
-void bignumber_push_back(BigNumber b, int data){
+void bignumber_push_front(BigNumber b, int data){
     Node p = node(data);
 
     if(b->first == NULL){ 
         b->first = p; 
         b->last = p;
     } else{
-        p->next = b->first; //Atualiza o ponteiro de próximo para o ponteiro do primeiro nó
-        b->first->prev = p; //Atualiza o ponteiro do anterior do primeiro nó para o nó implementado agora
-        b->first = p; //Atualiza o primeiro nó para o "novo" primeiro nó
+        p->next = b->first; //O próximo do novo nó é o primeiro nó(à esquerda)
+        b->first->prev = p; //O anterior do primeiro nó é o novo nó(à direita)
+        b->first = p; //O primeiro nó agora é o novo nó
     }
 
     b->n_elements += 1;
