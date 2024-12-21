@@ -4,10 +4,10 @@
 #include "node.h"
 
 Node node(int data){
-    Node p = malloc(sizeof(Node));
-    p->data = data;
-    p->next = NULL;
-    p->prev = NULL;
+    Node p = malloc(sizeof(Node)); //Aloca o novo nó
+    p->data = data; //Define o valor do novo nó
+    p->next = NULL; //Não tem "próximo" nó então o próximo é vazio
+    p->prev = NULL; //Mesma coisa do próximo, mas com o anterior
 
     return p;
 }

@@ -5,9 +5,9 @@
 #include "bignumber.h"
 
 struct _bignumber{
-    Node first;
-    Node last;
-    int n_elements;
+    Node first; //Ponteiro para o primeiro nó
+    Node last; //Ponteiro para o útlimo nó
+    int n_elements; //Contador de elementos do número
 };
 
 BigNumber bignumber(void){
@@ -23,29 +23,31 @@ BigNumber bignumber(void){
 void bignumber_push_back(BigNumber b, int data){
     Node p = node(data);
 
-    if(l->last == NULL){
-        l->first = p;
-        l->last = p;
+    if(b->last == NULL){ //Caso o último nó esteja vazio
+        b->first = p; //Atualiza o ponteiro do primeiro nó
+        b->last = p; //Atualiza o ponteiro do último nó
     } else{
-        l->last->next = p;
-        l->last = p;
+        p->prev = b->last; //Atualiza o ponteiro anterior ao nó atual como o ponteiro do último nó
+        b->last->next = p; //Atualiza o ponteiro do próximo nó do último no como o nó atual
+        b->last = p; //Atualiza o último nó para o "novo" último nó
     }
 
-    l->n_elements += 1;
+    b->n_elements += 1; //Aumenta o número de elementos
 }
 
 void bignumber_push_front(BigNumber b, int data){
     Node p = node(data);
 
-    if(l->first == NULL){
-        l->first = p;
-        l->last = p;
+    if(b->first == NULL){ 
+        b->first = p; 
+        b->last = p;
     } else{
-        p->next = l->first;
-        l->first = p;
+        p->next = b->first; //Atualiza o ponteiro de próximo para o ponteiro do primeiro nó
+        b->first->prev = p; //Atualiza o ponteiro do anterior do primeiro nó para o nó implementado agora
+        b->first = p; //Atualiza o primeiro nó para o "novo" primeiro nó
     }
 
-    l->n_elements += 1;
+    b->n_elements += 1;
 }
 
 void print_bignumber(BigNumber bignumber){
