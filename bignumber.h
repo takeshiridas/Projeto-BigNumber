@@ -1,11 +1,13 @@
 #ifndef BIGNUMBER_H
 #define BIGNUMBER_H
 
-struct bignumber{ int* valor; int capacity; int quantity; };
-
-typedef struct bignumber BigNumber;
+typedef struct _bignumber* BigNumber;
 
 BigNumber bignumber(void);//Construtor de BigNumber
+
+void bignumber_push_back(BigNumber b, int data);
+
+void bignumber_push_front(BigNumber b, int data);
 
 void print_bignumber(BigNumber bignumber); //Impressor de BigNumber
 
