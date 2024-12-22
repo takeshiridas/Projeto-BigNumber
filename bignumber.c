@@ -27,8 +27,8 @@ void bignumber_push_back(BigNumber b, int data){
         b->first = p; //Atualiza o ponteiro do primeiro nó
         b->last = p; //Atualiza o ponteiro do último nó
     } else{
-        p->prev = b->first; //O anterior do novo nó é o primeiro nó(à esquerda)
-        b->first->next = p; //O próximo do primeiro nó é o novo nó(à direita)
+        p->prev = b->last; //O anterior do novo nó é o primeiro nó(à esquerda)
+        b->last->next = p; //O próximo do primeiro nó é o novo nó(à direita)
         b->last = p; //O último nó agora é o novo nó
     }
 
@@ -42,8 +42,8 @@ void bignumber_push_front(BigNumber b, int data){
         b->first = p; 
         b->last = p;
     } else{
-        p->next = b->last; //O próximo do novo nó é o ultimo nó(à direita)
-        b->last->prev = p; //O anterior do primeiro nó é o novo nó(à esquerda)
+        p->next = b->first; //O próximo do novo nó é o ultimo nó(à direita)
+        b->first->prev = p; //O anterior do primeiro nó é o novo nó(à esquerda)
         b->first = p; //O primeiro nó agora é o novo nó
     }
 
@@ -58,6 +58,12 @@ void read_bignumber(BigNumber b){
 }
 
 void print_bignumber(BigNumber b){
+    Node current = b->first;
+
+    for(int i = 0; i < b->n_elements && current != NULL; i++){
+        printf("%d", current->data);
+        current = current->next;
+    }
 }
 
 BigNumber sum_bignumber(Bignumber a, BigNumber b{
