@@ -89,3 +89,7 @@ BigNumber power_bignumber(Bignumber a, BigNumber b){
 BigNumber remainder_bignumber(Bignumber a, BigNumber b){
 
 }
+
+void free_bignumber(BigNumber b){
+    
+}
