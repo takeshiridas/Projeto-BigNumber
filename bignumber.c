@@ -67,7 +67,21 @@ void print_bignumber(BigNumber b){
 }
 
 BigNumber sum_bignumber(Bignumber a, BigNumber b{
+    BigNumber result = bignumber();
 
+    Node* _a = a->last; // ponteiros para o último elemento; tail 
+    Node* _b = b->last;
+    int overflow = 0;
+
+    while (_a != NULL || _b!= NULL || overflow > 0) {
+        if (_a!=NULL)
+            digit_a = _a->data
+        else digit_a = 0;
+
+        if (_b!=NULL)
+            digit_a = _a->data
+        else digit_a = 0;
+    }
 }
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b){
