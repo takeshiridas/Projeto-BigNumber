@@ -66,24 +66,30 @@ void print_bignumber(BigNumber b){
     	}
 }
 
-BigNumber sum_bignumber(Bignumber a, BigNumber b){
+BigNumber sum_bignumber(BigNumber a, BigNumber b){
 	BigNumber result = bignumber();
 
     Node _a = a->last; // ponteiros para o último elemento; tail 
     Node _b = b->last;
 
-    Node current = result->last;
-	result->n_elements = (a->n_elements >= b->n_elements) ? a->n_elements + 1 : b->n_elements + 1; //Definindo o tamanho de result dependendo de qual número é maior
+	int carry = 0;
 
-	for(int i = 0; i < result->n_elements; i++){ //Definindo todos os algarismos de result como 0
-		current->data = _a->data + _b->data;
-		if(_a->data + _b->data >= 10){
-			current->data -= 10;
-		}
-		current = current->next;
-		_a = _a->next;
-		_b = _b->next;
-	}
+    while (_a != NULL || _b != NULL || carry > 0) {
+        int digit_a = (_a != NULL) ? _a->data : 0; // Se _a for NULL, usa 0
+        int digit_b = (_b != NULL) ? _b->data : 0; // Se _b for NULL, usa 0
+
+        int sum = digit_a + digit_b + carry; // Soma os dígitos e o carry
+        carry = sum / 10; // Atualiza o carry (1 se a soma for >= 10)
+        int result_digit = sum % 10; // Extrai o dígito atual
+
+        bignumber_push_front(result, result_digit); // Insere no início do resultado
+
+        // Avança para os nós anteriores (se existirem)
+        if (_a != NULL)
+			_a = _a->prev;
+        if (_b != NULL) 
+			_b = _b->prev;
+    }
 
 	return result;
 }
@@ -96,15 +102,15 @@ BigNumber multiplication_bignumber(BigNumber a, BigNumber b){
 
 }
 
-BigNumber divide_bignumber(Bignumber a, BigNumber b){
+BigNumber divide_bignumber(BigNumber a, BigNumber b){
 
 }
 
-BigNumber power_bignumber(Bignumber a, BigNumber b){
+BigNumber power_bignumber(BigNumber a, BigNumber b){
 
 }
 
-BigNumber remainder_bignumber(Bignumber a, BigNumber b){
+BigNumber remainder_bignumber(BigNumber a, BigNumber b){
 
 }
 
