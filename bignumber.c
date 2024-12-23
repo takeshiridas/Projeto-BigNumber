@@ -21,7 +21,7 @@ BigNumber bignumber(void){
 }
 
 void bignumber_push_back(BigNumber b, int data){
-	Node p = node(data);
+	Node p = node(data); //Ponteiro para o nó sendo inserido no final
 
 	if(b->last == NULL){ //Caso a lista esteja vazio
         	b->first = p; //Atualiza o ponteiro do primeiro nó
@@ -36,7 +36,7 @@ void bignumber_push_back(BigNumber b, int data){
 }
 
 void bignumber_push_front(BigNumber b, int data){
-	Node p = node(data);
+	Node p = node(data); //Ponteiro para o nó sendo inserido no início
 
 	if(b->first == NULL){ 
         	b->first = p; 
@@ -52,38 +52,40 @@ void bignumber_push_front(BigNumber b, int data){
 
 void read_bignumber(BigNumber b){
 	char c;
-	while(scanf("%c", &c) == 1 && c != '\n'){
-        	bignumber_push_back(b, c - '0');
+	while(scanf("%c", &c) == 1 && c != '\n'){ //Enquanto o scanf não der problemas e o usuário não der uma quebra de linha
+        	bignumber_push_back(b, c - '0'); //Vai inserindo o número na ordem digitada
     	}
 }
 
 void print_bignumber(BigNumber b){
-	Node current = b->first;
+	Node current = b->first; //Nó para o primeiro dígito
 
-	for(int i = 0; i < b->n_elements && current != NULL; i++){
-        	printf("%d", current->data);
-        	current = current->next;
+	for(int i = 0; i < b->n_elements && current != NULL; i++){ //Executa até chegar no último dígito ouu até dar algum nó com problema
+        	printf("%d", current->data); //Imprime o primeiro dígito
+        	current = current->next; //Atualiza para o dígito da direita
     	}
 }
 
 BigNumber sum_bignumber(Bignumber a, BigNumber b){
 	BigNumber result = bignumber();
 
-    	Node* _a = a->last; // ponteiros para o último elemento; tail 
-    	Node* _b = b->last;
-    	int overflow = 0;
+    Node _a = a->last; // ponteiros para o último elemento; tail 
+    Node _b = b->last;
 
-    	while (_a != NULL || _b!= NULL || overflow > 0) {
-        	if (_a!=NULL)
-        		digit_a = _a->data
-        	else 
-			digit_a = 0;
+    Node current = result->last;
+	result->n_elements = (a->n_elements >= b->n_elements) ? a->n_elements + 1 : b->n_elements + 1; //Definindo o tamanho de result dependendo de qual número é maior
 
-        	if (_b!=NULL)
-        		digit_a = _a->data
-        	else 
-			digit_a = 0;
-    	}
+	for(int i = 0; i < result->n_elements; i++){ //Definindo todos os algarismos de result como 0
+		current->data = _a->data + _b->data;
+		if(_a->data + _b->data >= 10){
+			current->data -= 10;
+		}
+		current = current->next;
+		_a = _a->next;
+		_b = _b->next;
+	}
+
+	return result;
 }
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b){
