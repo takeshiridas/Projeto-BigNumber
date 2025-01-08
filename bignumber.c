@@ -95,7 +95,14 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 }
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b){
+	BigNumber result = bignumber();
 
+	Node _a = a->last;
+	Node _b = b->last;
+
+	int carry = 1;
+
+	
 }
 
 BigNumber multiplication_bignumber(BigNumber a, BigNumber b){
