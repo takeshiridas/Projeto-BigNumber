@@ -66,6 +66,13 @@ void print_bignumber(BigNumber b){
     	}
 }
 
+int larger_bignumber(BigNumber a, BigNumber b){
+
+	return 0; //Se "a" NÃO é maior que "b"
+
+	return 1; //Se "a" é maior que "b"
+}
+
 BigNumber sum_bignumber(BigNumber a, BigNumber b){
 	BigNumber result = bignumber();
 

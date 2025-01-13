@@ -13,6 +13,8 @@ void read_bignumber(BigNumber b); //Leitor do BigNumber
 
 void print_bignumber(BigNumber b); //Impressor de BigNumber
 
+int larger_bignumber(BigNumber a, BigNumber b); //Compara se "a" é maior que "b"
+
 BigNumber sum_bignumber(Bignumber a, BigNumber b);//Soma
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b);//Subtração
