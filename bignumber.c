@@ -8,6 +8,7 @@ struct _bignumber{
     Node first; //Ponteiro para o primeiro nó
     Node last; //Ponteiro para o útlimo nó
     int n_elements; //Contador de elementos do número
+	char signal; //Sinal do número "+" ou "\0" ou " " para positivo e "-" para negativo
 };
 
 BigNumber bignumber(void){
@@ -117,7 +118,7 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 
 	int carry = 0;
 
-	if(compare_bignumber(a, zero) == 1 && compare_bignumber(b, zero) == 1){
+	if(compare_bignumber(a, zero) >= 0 && compare_bignumber(b, zero) >= 0){
 		while (_a != NULL || _b != NULL || carry > 0) {
 			int digit_a = (_a != NULL) ? _a->data : 0; // Se _a for NULL, usa 0
 			int digit_b = (_b != NULL) ? _b->data : 0; // Se _b for NULL, usa 0
@@ -134,9 +135,16 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 			if (_b != NULL) 
 				_b = _b->prev;
 	    	}
-	} /*else if(){
-	
-	}*/
+	} else if(compare_bignumber(a, zero) < 0 && compare_bignumber(b, zero) < 0){
+		//Caso os 2 números sejam negativos
+	} else{
+		//Se um número é negativo e o outro positivo, faça a subtração
+		if(compare_bignumber(a, zero) >= 0){
+			result = minus_bignumber(a, b);
+		} else{
+			result = minus_bignumber(b, a);
+		}
+	}
 
 	return result;
 }
