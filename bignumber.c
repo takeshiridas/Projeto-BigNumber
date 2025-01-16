@@ -150,14 +150,50 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 }
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b){
+	initialize_zero();
 	BigNumber result = bignumber();
 
 	Node _a = a->last;
 	Node _b = b->last;
 
-	int carry = 1;
+	if(compare_bignumber(a, b) >= 0){
+		int borrow = 0; //Váriavel para gerenciar o empréstimo do(s) dígito(s) anterior(es)
+		while(_a != NULL || _a != NULL){
+			int digit_a = (_a != NULL) ? _a->data : 0;
+			int digit_b = (_b != NULL) ? _b->data : 0;
 
+			int minus = digit_a - digit_b - borrow;
+
+			if(minus < 0){
+				minus += 10;
+				borrow = 1; //Precisamos do empréstimo
+			} else{
+				borrow = 0; //Não precisamos do empréstimo
+			}
+
+			bignumber_push_front(result, minus);
+
+			if(_a != NULL)
+				_a = _a->prev;
+			if(_b != NULL)
+				_b = _b->prev;
+		}
+	}
+	//Removendo zeros à esquerda, se tiverem
+	while(result->first != NULL && result->first->data == 0){
+		Node temp = result->first;
+		result->first = result->first->next;
+		if(result->first != NULL)
+			result->first->prev = NULL;
+		free(temp);
+		result->n_elements--;
+	}
+	//Caso o resultado seja 0(por exemplo, 1234 - 1234)
+	if(result->n_elements == 0){
+		bignumber_push_back(result, 0);
+	}
 	
+	return result;
 }
 
 BigNumber multiplication_bignumber(BigNumber a, BigNumber b){
