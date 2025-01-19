@@ -15,18 +15,20 @@ void print_bignumber(BigNumber b); //Impressor de BigNumber
 
 int compare_bignumber(BigNumber a, BigNumber b); //Compara "a" e "b"
 
-BigNumber sum_bignumber(Bignumber a, BigNumber b);//Soma
+BigNumber inverte(BigNumber b); //Cria um bignumber temporário para fazer inversões de sinais sem trocar o sinal do número original
+
+BigNumber sum_bignumber(BigNumber a, BigNumber b);//Soma
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b);//Subtração
 
 BigNumber multiplication_bignumber(BigNumber a, BigNumber b);//Multiplicação
 
-BigNumber divide_bignumber(Bignumber a, BigNumber b);//Divisão
+BigNumber divide_bignumber(BigNumber a, BigNumber b);//Divisão
 
-BigNumber power_bignumber(Bignumber a, BigNumber b);//Potenciação
+BigNumber power_bignumber(BigNumber a, BigNumber b);//Potenciação
 
-BigNumber remainder_bignumber(Bignumber a, BigNumber b);//Resto de Divisão
+BigNumber remainder_bignumber(BigNumber a, BigNumber b);//Resto de Divisão
 
-void free_bignumber(BigNumber b);
+void free_bignumber(BigNumber);
 
 #endif
