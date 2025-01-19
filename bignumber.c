@@ -17,6 +17,7 @@ BigNumber bignumber(void){
     b->first = NULL;
     b->last = NULL;
     b->n_elements = 0;
+    b->signal = '+';
 
     return b;
 }
@@ -72,26 +73,28 @@ static void initialize_zero(void){
 
 void read_bignumber(BigNumber b) {
     char c;
-    int is_first = 1;
+    int is_first = 1; // Flag para verificar se é o primeiro caractere lido
 
     while (scanf("%c", &c) == 1 && c != '\n') {
-        if (is_first == 1) {
+        if (is_first) {
             // Verifica se o primeiro caractere é um sinal
-            if (c == '-' || c == '+') {
-                b->signal = c;
+            if (c == '-') {
+                b->signal = '-';
+            } else if (c == '+') {
+                b->signal = '+'; // Explicitamente positivo
             } else if (c >= '0' && c <= '9') {
-                b->signal = '+'; // Assume positivo se não houver sinal explícito
-                bignumber_push_back(b, c - '0');
+                // Se o primeiro caractere for um dígito, assume-se positivo
+                b->signal = '+';
+                bignumber_push_back(b, c - '0'); // Adiciona o primeiro dígito
             }
-            is_first = 0;
+            is_first = 0; // Sinaliza que o primeiro caractere já foi processado
         } else {
-            // Verifica se os caracteres subsequentes são números válidos
-            if (c >= '0' && c <= '9') {
-                bignumber_push_back(b, c - '0');
-            } 
+            // Para os caracteres subsequentes, apenas dígitos são aceitos
+		bignumber_push_back(b, c - '0');
         }
     }
 }
+
 
 
 void print_bignumber(BigNumber b){
@@ -153,6 +156,20 @@ int compare_bignumber(BigNumber a, BigNumber b){
 	return 0; //Se "a" é IGUAL a "b"
 }
 
+BigNumber inverte(BigNumber b){
+	BigNumber temp = bignumber();
+	temp->first = b->first;
+	temp->last = b->last;
+	temp->n_elements = b->n_elements;
+	
+	if(b->signal == '+')
+		temp->signal = '-';
+	else
+		temp->signal = '+';
+		
+	return temp;
+}
+
 BigNumber sum_bignumber(BigNumber a, BigNumber b){
 	initialize_zero();
 	BigNumber result = bignumber();
@@ -184,11 +201,11 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 	} else{
 		//Se um número é negativo e o outro positivo, faça a subtração
 		if(a->signal == '-'){
-			a->signal = '+';
-			result = minus_bignumber(b, a);// b - a
+			BigNumber temp_a = inverte(a);
+			result = minus_bignumber(b, temp_a);// b - a
 		} else{
-			b->signal = '+';
-			result = minus_bignumber(a, b);// a - b
+			BigNumber temp_b = inverte(b);
+			result = minus_bignumber(a, temp_b);// a - b
 		}
 	}
 
@@ -233,18 +250,18 @@ BigNumber minus_bignumber(BigNumber a, BigNumber b){
 				result = minus_bignumber(b, a);
 			}
 		} else{
-			a->signal = '+';
-			b->signal = '+';
-			result = minus_bignumber(b, a);
+			BigNumber temp_a = inverte(a);
+			BigNumber temp_b = inverte(b);
+			result = minus_bignumber(temp_b, temp_a);
 			result->signal = '-';
 		}
 	} else{
 		if(a->signal == '-'){
-			a->signal = '+';
-			result = sum_bignumber(b, a);
+			BigNumber temp_a = inverte(a);
+			result = sum_bignumber(b, temp_a);
 		} else{
-			b->signal = '+';
-			result = sum_bignumber(a, b);
+			BigNumber temp_b = inverte(b);
+			result = sum_bignumber(a, temp_b);
 		}
 		
 	}
@@ -259,8 +276,7 @@ BigNumber minus_bignumber(BigNumber a, BigNumber b){
 	}
 	//Caso o resultado seja 0(por exemplo, 100 - 100)
 	if(result->n_elements == 0){
-		bignumber_push_back(result, 0);
-		result->signal = '+';
+		result = zero;
 	}
 	
 	return result;
