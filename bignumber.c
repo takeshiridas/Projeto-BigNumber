@@ -7,8 +7,8 @@
 struct _bignumber{
     Node first; //Ponteiro para o primeiro nó
     Node last; //Ponteiro para o útlimo nó
-    int n_elements; //Contador de elementos do número
-	char signal; //Sinal do número "+" ou "\0" ou " " para positivo e "-" para negativo
+    int n_elements; //Contador de algarismos do número
+    char signal; //Positivo ou Negativo
 };
 
 BigNumber bignumber(void){
@@ -22,7 +22,7 @@ BigNumber bignumber(void){
 }
 
 void bignumber_push_back(BigNumber b, int data){
-    Node p = node(data); //Ponteiro para o nó sendo inserido no final
+    Node p = node(data);
 
     if(b->last == NULL){ //Caso a lista esteja vazio
         b->first = p; //Atualiza o ponteiro do primeiro nó
@@ -37,7 +37,7 @@ void bignumber_push_back(BigNumber b, int data){
 }
 
 void bignumber_push_front(BigNumber b, int data){
-    Node p = node(data); //Ponteiro para o nó sendo inserido no início
+    Node p = node(data);
 
     if(b->first == NULL){ 
         b->first = p; 
@@ -58,10 +58,11 @@ static void initialize_zero(void){
 	if(zero == NULL){
 		zero = bignumber();
 		bignumber_push_back(zero,0);
+		zero->signal = '+';
 	}
 }
 
-//static void free_zero(void) _attribute_((destructor));
+//static void free_zero(void) __attribute__((destructor));
 /*static void free_zero(void){
 	if(zero != NULL){
 		bignumber_free(zero);
@@ -69,19 +70,36 @@ static void initialize_zero(void){
 	}
 }*/
 
-void read_bignumber(BigNumber b){
+void read_bignumber(BigNumber b) {
     char c;
-    while(scanf("%c", &c) == 1 && c != '\n'){ //Enquanto o scanf não der problemas e o usuário não der uma quebra de linha
-        bignumber_push_back(b, c - '0'); //Vai inserindo o número na ordem digitada
+    int is_first = 1;
+
+    while (scanf("%c", &c) == 1 && c != '\n') {
+        if (is_first == 1) {
+            // Verifica se o primeiro caractere é um sinal
+            if (c == '-' || c == '+') {
+                b->signal = c;
+            } else if (c >= '0' && c <= '9') {
+                b->signal = '+'; // Assume positivo se não houver sinal explícito
+                bignumber_push_back(b, c - '0');
+            }
+            is_first = 0;
+        } else {
+            // Verifica se os caracteres subsequentes são números válidos
+            if (c >= '0' && c <= '9') {
+                bignumber_push_back(b, c - '0');
+            } 
+        }
     }
 }
 
-void print_bignumber(BigNumber b){
-    Node current = b->first; //Nó para o primeiro dígito
 
-    for(int i = 0; i < b->n_elements && current != NULL; i++){ //Executa até chegar no último dígito ouu até dar algum nó com problema
-        printf("%d", current->data); //Imprime o primeiro dígito
-        current = current->next; //Atualiza para o dígito da direita
+void print_bignumber(BigNumber b){
+    Node current = b->first;
+    printf("%c", b->signal);
+    for(int i = 0; i < b->n_elements && current != NULL; i++){
+        printf("%d", current->data);
+        current = current->next;
     }
     printf("\n");
 }
@@ -90,20 +108,46 @@ int compare_bignumber(BigNumber a, BigNumber b){
 	Node _a = a->first;
 	Node _b = b->first;
 	
-	if(a->n_elements > b->n_elements){
-		return 1; //Se "a" é MAIOR que "b"
-	} else if(a->n_elements < b->n_elements){
-		return -1; //Se "a" é MENOR que "b"
-	}
-	
-	for(int i = a->n_elements; i > 0; i--){
-		if(_a->data > _b->data){
-			return 1;
-		} else if(_a->data < _b->data){
-			return -1;
+	if(a->signal == '+' && b->signal == '+'){
+		//Se os 2 são positivos
+		if(a->n_elements > b->n_elements){
+			return 1; //Se "a" é MAIOR que "b"
+		} else if(a->n_elements < b->n_elements){
+			return -1; //Se "a" é MENOR que "b"
 		}
-		_a = _a->next;
-		_b = _b->next;
+		
+		for(int i = a->n_elements; i > 0; i--){
+			if(_a->data > _b->data){
+				return 1;
+			} else if(_a->data < _b->data){
+				return -1;
+			}
+			_a = _a->next;
+			_b = _b->next;
+		}
+	} else if(a->signal != b->signal){
+		//Se um é negativo e o outro positivo
+		if(a->signal == '-')
+			return -1;
+		else
+			return 1;
+	} else if(a->signal == '-' && b->signal == '-'){
+		//Como aqui os 2 são negativos, tudo que for maior em caso de números positivos vai ser menor
+		if(a->n_elements > b->n_elements){
+			return -1;
+		} else if(a->n_elements < b->n_elements){
+			return 1; 
+		}
+		
+		for(int i = a->n_elements; i > 0; i--){
+			if(_a->data > _b->data){
+				return -1;
+			} else if(_a->data < _b->data){
+				return 1;
+			}
+			_a = _a->next;
+			_b = _b->next;
+		}
 	}
 	
 	return 0; //Se "a" é IGUAL a "b"
@@ -113,12 +157,12 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 	initialize_zero();
 	BigNumber result = bignumber();
 
-	Node _a = a->last; // ponteiros para o último elemento tail 
+	Node _a = a->last; // ponteiros para o último elemento; tail 
 	Node _b = b->last;
 
 	int carry = 0;
 
-	if(compare_bignumber(a, zero) >= 0 && compare_bignumber(b, zero) >= 0){
+	if(a->signal == b->signal){
 		while (_a != NULL || _b != NULL || carry > 0) {
 			int digit_a = (_a != NULL) ? _a->data : 0; // Se _a for NULL, usa 0
 			int digit_b = (_b != NULL) ? _b->data : 0; // Se _b for NULL, usa 0
@@ -135,14 +179,16 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 			if (_b != NULL) 
 				_b = _b->prev;
 	    	}
-	} else if(compare_bignumber(a, zero) < 0 && compare_bignumber(b, zero) < 0){
-		//Caso os 2 números sejam negativos
+	    	
+	    	result->signal = a->signal;
 	} else{
 		//Se um número é negativo e o outro positivo, faça a subtração
-		if(compare_bignumber(a, zero) >= 0){
-			result = minus_bignumber(a, b);
+		if(a->signal == '-'){
+			a->signal = '+';
+			result = minus_bignumber(b, a);// b - a
 		} else{
-			result = minus_bignumber(b, a);
+			b->signal = '+';
+			result = minus_bignumber(a, b);// a - b
 		}
 	}
 
@@ -152,34 +198,57 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 BigNumber minus_bignumber(BigNumber a, BigNumber b){
 	initialize_zero();
 	BigNumber result = bignumber();
-
+	
 	Node _a = a->last;
 	Node _b = b->last;
 
-	if(compare_bignumber(a, b) >= 0){
-		int borrow = 0; //Váriavel para gerenciar o empréstimo do(s) dígito(s) anterior(es)
-		while(_a != NULL || _a != NULL){
-			int digit_a = (_a != NULL) ? _a->data : 0;
-			int digit_b = (_b != NULL) ? _b->data : 0;
-
-			int minus = digit_a - digit_b - borrow;
-
-			if(minus < 0){
-				minus += 10;
-				borrow = 1; //Precisamos do empréstimo
+	if(a->signal == b->signal){
+		if(a->signal == '+'){
+			if(compare_bignumber(a, b) >= 0){
+				int borrow = 0; //Váriavel para gerenciar o empréstimo	
+				while(_a != NULL || _b != NULL){
+					int digit_a = (_a != NULL) ? _a->data : 0;
+					int digit_b = (_b != NULL) ? _b->data : 0;
+					
+					int minus = digit_a - digit_b - borrow;
+					
+					if(minus < 0){
+						minus += 10;
+						borrow = 1;
+					} else{
+						borrow = 0;
+					}
+					
+					
+					bignumber_push_front(result, minus);
+					
+					if(_a != NULL)
+						_a = _a->prev;
+					if(_b != NULL)
+						_b = _b->prev;
+				}
+				
+				result->signal = a->signal;
 			} else{
-				borrow = 0; //Não precisamos do empréstimo
+				result = minus_bignumber(b, a);
 			}
-
-			bignumber_push_front(result, minus);
-
-			if(_a != NULL)
-				_a = _a->prev;
-			if(_b != NULL)
-				_b = _b->prev;
+		} else{
+			a->signal = '+';
+			b->signal = '+';
+			result = minus_bignumber(b, a);
+			result->signal = '-';
 		}
+	} else{
+		if(a->signal == '-'){
+			a->signal = '+';
+			result = sum_bignumber(b, a);
+		} else{
+			b->signal = '+';
+			result = sum_bignumber(a, b);
+		}
+		
 	}
-	//Removendo zeros à esquerda, se tiverem
+	//Remover zeros à esquerda se tiver
 	while(result->first != NULL && result->first->data == 0){
 		Node temp = result->first;
 		result->first = result->first->next;
@@ -188,30 +257,11 @@ BigNumber minus_bignumber(BigNumber a, BigNumber b){
 		free(temp);
 		result->n_elements--;
 	}
-	//Caso o resultado seja 0(por exemplo, 1234 - 1234)
+	//Caso o resultado seja 0(por exemplo, 100 - 100)
 	if(result->n_elements == 0){
 		bignumber_push_back(result, 0);
+		result->signal = '+';
 	}
 	
 	return result;
-}
-
-BigNumber multiplication_bignumber(BigNumber a, BigNumber b){
-
-}
-
-BigNumber divide_bignumber(BigNumber a, BigNumber b){
-
-}
-
-BigNumber power_bignumber(BigNumber a, BigNumber b){
-
-}
-
-BigNumber remainder_bignumber(BigNumber a, BigNumber b){
-
-}
-
-void free_bignumber(BigNumber b){
-    
 }
