@@ -29,6 +29,6 @@ BigNumber power_bignumber(BigNumber a, BigNumber b);//Potenciação
 
 BigNumber remainder_bignumber(BigNumber a, BigNumber b);//Resto de Divisão
 
-void free_bignumber(BigNumber);
+void free_bignumber(BigNumber);//Libera Memória
 
 #endif

@@ -17,8 +17,6 @@ BigNumber bignumber(void){
     b->first = NULL;
     b->last = NULL;
     b->n_elements = 0;
-    b->signal = '+';
-
     return b;
 }
 
@@ -63,13 +61,12 @@ static void initialize_zero(void){
 	}
 }
 
-//static void free_zero(void) __attribute__((destructor));
-/*static void free_zero(void){
+static void free_zero(void) __attribute((destructor));
+static void free_zero(void){
 	if(zero != NULL){
-		bignumber_free(zero);
-		zero = NULL;
+		free_bignumber(zero);
 	}
-}*/
+}
 
 void read_bignumber(BigNumber b) {
     char c;
@@ -203,12 +200,13 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b){
 		if(a->signal == '-'){
 			BigNumber temp_a = inverte(a);
 			result = minus_bignumber(b, temp_a);// b - a
+			free_bignumber(temp_a);
 		} else{
 			BigNumber temp_b = inverte(b);
 			result = minus_bignumber(a, temp_b);// a - b
+			free_bignumber(temp_b);
 		}
 	}
-
 	return result;
 }
 
@@ -254,30 +252,50 @@ BigNumber minus_bignumber(BigNumber a, BigNumber b){
 			BigNumber temp_b = inverte(b);
 			result = minus_bignumber(temp_b, temp_a);
 			result->signal = '-';
+			free_bignumber(temp_a);
+			free_bignumber(temp_b);
 		}
 	} else{
-		if(a->signal == '-'){
-			BigNumber temp_a = inverte(a);
-			result = sum_bignumber(b, temp_a);
-		} else{
-			BigNumber temp_b = inverte(b);
-			result = sum_bignumber(a, temp_b);
+		if (a->signal == '-') {
+		    BigNumber temp_a = inverte(a);
+		    result = minus_bignumber(b, temp_a);
+		    free_bignumber(temp_a); // Certifique-se de liberar corretamente
+		} else {
+		    BigNumber temp_b = inverte(b);
+		    result = minus_bignumber(a, temp_b);
+		    free_bignumber(temp_b);
 		}
+
 		
 	}
 	//Remover zeros à esquerda se tiver
-	while(result->first != NULL && result->first->data == 0){
-		Node temp = result->first;
-		result->first = result->first->next;
-		if(result->first != NULL)
-			result->first->prev = NULL;
-		free(temp);
-		result->n_elements--;
+	while (result->first != NULL && result->first->data == 0) {
+	    Node temp = result->first;
+	    result->first = result->first->next;
+	    if (result->first != NULL)
+		result->first->prev = NULL;
+	    free(temp);
+	    result->n_elements--;
 	}
-	//Caso o resultado seja 0(por exemplo, 100 - 100)
-	if(result->n_elements == 0){
-		result = zero;
+	if (result->n_elements == 0) { // Caso o resultado seja zero
+	    free_bignumber(result);
+	    result = bignumber();
+	    bignumber_push_back(result, 0);
+	    result->signal = '+';
 	}
 	
 	return result;
 }
+
+void free_bignumber(BigNumber b) {
+    Node temp = b->first; // Ponteiro para o primeiro nó
+    while (temp != NULL) { // Percorre todos os nós
+        Node next = temp->next; // Guarda o próximo nó
+        free(temp); // Libera o nó atual
+        temp = next; // Avança para o próximo nó
+    }
+    b->first = NULL; // Garante que o ponteiro seja nulo após a liberação
+    b->last = NULL;
+    free(b); // Finalmente, libera a estrutura BigNumber
+}
+
