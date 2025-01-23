@@ -21,14 +21,6 @@ BigNumber sum_bignumber(BigNumber a, BigNumber b);//Soma
 
 BigNumber minus_bignumber(BigNumber a, BigNumber b);//Subtração
 
-BigNumber multiplication_bignumber(BigNumber a, BigNumber b);//Multiplicação
-
-BigNumber divide_bignumber(BigNumber a, BigNumber b);//Divisão
-
-BigNumber power_bignumber(BigNumber a, BigNumber b);//Potenciação
-
-BigNumber remainder_bignumber(BigNumber a, BigNumber b);//Resto de Divisão
-
 void free_bignumber(BigNumber);//Libera Memória
 
 #endif
