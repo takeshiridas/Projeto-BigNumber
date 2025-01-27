@@ -10,5 +10,4 @@ struct _node{
 };
 
 Node node(int data);
-void node_print(Node l);
 #endif
